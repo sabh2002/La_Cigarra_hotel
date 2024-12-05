@@ -1,0 +1,151 @@
+{% extends "MenuPage.html" %}
+{% load static %}
+{% block title %}Menu de reportes{% endblock title %}
+{% block link %}
+    <!--DATERANGEPICKER-->
+    <link rel="stylesheet" type="text/css" href="{% static 'MenuBase/vendor/libs/daterangepicker/daterangepicker.css' %}">
+    <!--SELECT2-->
+    <link rel="stylesheet" type="text/css" href="{% static 'MenuBase/vendor//libs/select2/css/select2.min.css' %}">
+    <link rel="stylesheet" href="{% static 'MenuBase/vendor//libs/select2-bootstrap4-theme/select2-bootstrap4.min.css' %}">
+{% endblock link %}
+{% block content %}
+{% if request.user.is_staff %}
+
+    <div class="row">
+        <!--clientes-->
+        <div class="col-md-6 col-lg-4">
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Reporte de los Clientes</h5>
+                    <p class="card-text">Generar reporte de todos los Clientes registrados</p>
+                    <a href="{% url 'reservacion:re_cliente' %}" class="btn btn-primary" target="_blank">Imprimir</a>
+                </div>
+            </div>
+        </div>
+
+        <!--reservaciones-->
+        <div class="col-md-6 col-lg-4">
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Reporte de reservaciones</h5>
+                    <p class="card-text">Generar reportes de las Reservaciones registradas</p>
+                    <select name="reserva" id="id_reserva" class="form-control">
+                        <option value="Aprobada">Aprobadas</option>
+                        <option value="Pendiente">Pendientes</option>
+                        <option value="Rechazada">Rechazadas</option>
+                        <option value="Finalizada">Finalizadas</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!--reservaciones por habitaciones-->
+        <div class="col-md-6 col-lg-4">
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Reporte de habitaciones mas reservadas</h5>
+                    <p class="card-text">Generar reportes de las habitaciones mas reservadas</p>
+                    <a href="{% url 'reservacion:re_reservaciones_habi' %}" class="btn btn-primary" target="_blank">Imprimir</a>
+                </div>
+            </div>
+        </div>
+
+        <!--reportes de los turnos-->
+        <div class="col-md-6 col-lg-4">
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Reporte de turnos</h5>
+                    <p class="card-text">Generar reportes del turno (Habitaciones mas reservadas, reservaciones y ventas)</p>
+                    <input type="text" name="turno" id="id_turno" class="form-control" readonly>
+                </div>
+            </div>
+        </div>
+    </div>
+{% else %}
+<div class="misc-wrapper">
+    <h2 class="mb-2 mx-2">La página no Funciona :(</h2>
+    <p class="mb-4 mx-2">Oops! 😖 No tienes permiso para ingresar a esta sección.</p>
+    <a href="{% url 'reservacion:menu' %}" class="btn btn-primary">Regresar al Inicio</a>
+    <div class="mt-3">
+        <img
+            src="{% static 'MenuBase/img/error_page.png' %}"
+            alt="page-misc-error-light"
+            width="500"
+            class="img-fluid"
+        />
+    </div>
+</div>
+{% endif %}
+
+{% endblock content %}
+{% block js %}
+
+<!--DATERANGEPICKER-->
+<script type="text/javascript" src="{% static 'MenuBase/vendor/libs/moment/moment.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'MenuBase/vendor/libs/daterangepicker/daterangepicker.js' %}"></script>
+
+<script type="text/javascript" src="{% static 'MenuBase/vendor/libs/select2/js/select2.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'MenuBase/vendor/libs/select2/js/i18n/es.js' %}"></script>
+
+<script type="text/javascript">
+    $(function() {
+        $('#id_turno').on("focus", function(){
+            $('input[name="turno"]').daterangepicker({
+                opens: 'left',
+                singleDatePicker: false,
+                timePicker: true,
+                timePicker24Hour: true,
+                timePickerIncrement: 1,
+                "locale": {
+                    "format": "YYYY-MM-DD",
+                    "separator": " / ",
+                    "applyLabel": "Aplicar",
+                    "cancelLabel": "Cancelar",
+                    "fromLabel": "De",
+                    "toLabel": "a",
+                    "customRangeLabel": "Custom",
+                    "daysOfWeek": [
+                        "Do",
+                        "Lu",
+                        "Ma",
+                        "Mi",
+                        "Ju",
+                        "Vi",
+                        "Sa"
+                    ],
+                    "monthNames": [
+                        "Enero",
+                        "Febrero",
+                        "Marzo",
+                        "Abril",
+                        "Mayo",
+                        "Junio",
+                        "Julio",
+                        "Agosto",
+                        "Septiembre",
+                        "Octubre",
+                        "Noviembre",
+                        "Deciembre"
+                    ],
+                    "firstDay": 1
+                }
+            }).on('apply.daterangepicker', function(ev, picker) {
+                window.open('/reporte-por-turnos/'+ picker.startDate.format('YYYY-MM-DD HH:mm') +'/'+ picker.endDate.format('YYYY-MM-DD HH:mm') +'/')         
+            });
+        });
+    });
+
+    $('#id_reserva').val('').trigger('change.select2');
+    $("#id_reserva").select2({
+        placeholder: 'Seleccione el estado de la reserva',
+        theme:'bootstrap4',
+        language: "es",
+        allowClear: true
+
+    }).on('select2:select', function (e) {
+        var data = e.params.data;
+        window.open('/reporte-de-reservaciones/'+ data.id +'/')
+        $('#id_reserva').val('').trigger('change.select2');
+    });
+</script>
+{% endblock js %}

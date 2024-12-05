@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title>Reporte de turno</title>
+<style>
+    @page {
+        size: a4 portrait;
+        margin: 3.5cm 2.0cm 2.5cm 2.0cm;
+        @frame header_frame {           /* Static Frame */
+            -pdf-frame-content: header_content;
+            left: 40pt; width: 512pt; top: 10pt; height: 100pt;
+        }
+        @frame content_frame {          /* Content Frame */
+            -pdf-frame-content: content_frame;
+            left: 50pt; width: 512pt; top: 90pt; height: 632pt;
+        }
+        @frame footer_frame {           /* Another static Frame */
+            -pdf-frame-content: footer_content;
+            left: -70pt; width: 512pt; top: 772pt; height: 20pt;
+        }
+    }
+    .head {
+        text-align: center;
+        text-transform: uppercase;
+        font-size: 13px;
+        font-weight: 600;
+        margin-bottom: 3rem;
+    }
+
+    #invoice thead tr th {
+        text-align: left;
+        border-bottom: 1px solid black;
+        border-top: 1px solid black;
+        padding-top: 4px;
+    }
+
+    #invoice thead tr {
+        margin-bottom: 0;
+        padding-bottom: 0;
+    }
+
+    #invoice tbody tr {
+        padding: 0;
+    }
+
+    .cosa{
+        width: 100%;
+        margin: 10px;
+        border-top: black;
+    }
+
+    #invoice tbody tr td {
+        text-align: left;
+        border-bottom: 1px solid rgb(183, 183, 183);
+        padding-top: 4px;
+    }
+
+</style>
+<body>
+    <div id="header_content">
+        <img src="{{logo}}" alt="logo" width="100px" height="100px">
+        <p class="head">
+            <b style="font-size: 20px;">MOTEL LA CIGARRA</b> <br>
+        </p>
+    </div>
+<div class="content_frame">
+    <p>
+        <b style="font-size: 18px;">Reporte de Turno</b> <br> <br>
+        <b>FECHA EN QUE SE GENERA EL REPORTE:  {{ today|date:"d-m-Y" }}, HORA: {{hour|date:"H:i"}}</b> <br>
+        <b>TURNO DESDE:  {{ fecha1|date:"d-m-Y H:i" }}, HASTA: {{fecha2|date:"d-m-Y H:i"}}</b> <br>
+        <b>REPORTE GENERADO POR:  {{request.user.nombre}} {{request.user.apellido}}</b> <br>
+    </p>
+    <h4>Habitaciones mas reservadas</h4>
+    <table id="invoice">
+        <thead>
+            <tr>
+                <th class="cosa">Habitacion N°</th>
+                <th class="cosa">Clase</th>
+                <th class="cosa">Tipo</th>
+                <th class="cosa">Precio</th>
+                <th class="cosa">Descripcion</th>
+                <th class="cosa">Reservaciones</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for x in habi_usadas %}
+            <tr>
+                <td class="cosa">{{ x.id }}</td>
+                <td class="cosa">{{ x.clase }}</td>
+                <td class="cosa">{{ x.tipo }}</td>
+                <td class="cosa">{{ x.precio|floatformat:"-2" }} $</td>
+                <td class="cosa">{{ x.desc}}</td>
+                <td class="cosa">{{ x.nro}}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="7" valign="middle">NO HAY REGISTROS</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <h4>Reservaciones</h4>
+    <table id="invoice">
+        <thead>
+            <tr>
+                <th class="cosa">Cliente</th>
+                <th class="cosa">Fecha R.</th>
+                <th class="cosa">Habitación</th>
+                <th class="cosa">Fecha Ll.</th>
+                <th class="cosa">Fecha S.</th>
+                <th class="cosa">Total $</th>
+                <th class="cosa">Total Bs</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for x in reservas %}
+            <tr>
+                <td class="cosa">{{ x.codigoReserva.cliente.cedula }}</td>
+                <td class="cosa">{{ x.codigoReserva.fechaReserva|date:'d-m-Y' }}</td>
+                <td class="cosa">{{ x.habitacion.numeroHabitacion }}</td>
+                <td class="cosa">{{ x.fechaLlegada|date:"d-m-Y H:i" }}</td>
+                <td class="cosa">{{ x.fechaSalida|date:"d-m-Y H:i"}}</td>
+                <td class="cosa">{{ x.cantidad|floatformat:"-2"}}$</td>
+                <td class="cosa">{{ x.total_bs|floatformat:"-2"}} Bs.S</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="7" valign="middle">NO HAY REGISTROS</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <h4>Ventas</h4>
+    <table id="invoice">
+        <thead>
+            <tr>
+                <th class="cosa">Fecha de venta</th>
+                <th class="cosa">Vendedor</th>
+                <th class="cosa">Total $</th>
+                <th class="cosa">Total Bs</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for x in ventas %}
+            <tr>
+                <td class="cosa">{{ x.fecha_venta|date:"d-m-Y H:i"}}</td>
+                <td class="cosa">{{ x.vendedor.cedula }}</td>
+                <td class="cosa">{{ x.total_dolar|floatformat:"-2"}} $</td>
+                <td class="cosa">{{ x.total_bs|floatformat:"-2"}} Bs.S</td>
+            </tr>
+        {% empty %}
+        <tr>
+            <td colspan="4" valign="middle">NO HAY REGISTROS</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+<div id="footer_content">Pág. <pdf:pagenumber>
+    de <pdf:pagecount>
+</div>
+</body>
+</html>

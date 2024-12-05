@@ -1,0 +1,105 @@
+{% extends "MenuPage.html" %}
+{% load static %}
+{% block title %}Nueva reservacion{% endblock title %}
+{% block link %}
+	<!--DATERANGEPICKER-->
+	<link rel="stylesheet" type="text/css" href="{% static 'MenuBase/vendor/libs/daterangepicker/daterangepicker.css' %}">
+{% endblock link %}
+{% block content %}
+
+<div class="card">
+	<div class="row">
+		<div class="col-xl">
+			<div class="mb-4">
+				<div class="card-header d-flex justify-content-between align-items-center">
+					<h5 class="mb-0">Registrar Reservación</h5>
+				</div>
+				<div class="card-body">
+					<form id="form_reservacion" method="post">{% csrf_token %}
+						<input type="hidden" name="action" value="new_reservacion">
+						<input type="hidden" name="rol" value="{{request.user.is_staff}}">
+
+						<!--FIla de duracion y habitacion-->
+						<div class="row g-2">
+							<div class="col">
+								<div class="mb-3">
+									<label class="form-label" for="id_dura">Duración</label>
+									<div class="input-group input-group-merge">
+										<span class="input-group-text"><i class="fas fa-clock"></i></span>
+										<select name="duracion" id="id_dura" class="form-control" onchange="ShowSelected();">
+											<option value="">--Seleccione--</option>
+											<option value="Corta duracion">Corta Duración</option>
+											<option value="Larga duracion">Larga Duración</option>
+										</select>
+									</div>
+								</div>
+							</div>
+							<div class="col">
+								<div class="mb-3">
+									<label class="form-label" for="id_habitacion">Habitación</label>
+									<div class="input-group input-group-merge">
+										<span class="input-group-text"><i class='bx bxs-buildings'></i></span>
+										<select name="habitacion" id="id_habitacion" class="form-control" required>
+											<option selected value="">-- Seleccione --</option>
+										</select>
+									</div>
+								</div>
+							</div>
+						</div>
+						<!--Fila de las fechas y cliente-->
+						<div class="row g-2">
+							<div class="col mb-3">
+								<label class="form-label" for="id_daterangepicker">Seleccione el intervalo de tiempo de la reservacion</label>
+								<div class="input-group input-group-merge">
+									<span id="basic-icon-default-fullname2" class="input-group-text"><i class='bx bxs-calendar'></i></span>
+									<input type="text" class="form-control text-center" name="daterangepicker" id="id_daterangepicker" placeholder="Seleccione los dias de la reservacion" required readonly>
+									<input type="hidden" name="fechaLlegada" id="id_fechaLlegada">
+									<input type="hidden" name="fechaSalida" id="id_fechaSalida">
+								</div>
+							</div>
+							<div class="col">
+								<div class="mb-3">
+									<label class="form-label" for="id_cliente">Cliente</label>
+									<div class="input-group input-group-merge">
+										<span id="basic-icon-default-phone2" class="input-group-text"><i class='bx bxs-user-check'></i></span>
+										<input type="text" id="id_cliente" name="cliente" class="form-control phone-mask" placeholder="Cliente" value="{{request.user.username}}" readonly required>
+									</div>
+								</div>
+							</div>
+						</div>
+						<button type="submit" class="btn btn-primary">Guardar</button>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!--Habitaciones ocupadas-->
+{% if proximas %}
+<div class="card">
+	<div class="col-xl">
+		<div class="card-header d-flex justify-content-between align-items-center">
+			<h5 class="mb-0">Habitaciones ocupadas</h5>
+		</div>
+		<div class="card-body">
+			<div class="row col-lg-4">
+				<div class="col">
+					<select name="" id="" class="form-control">
+						<option value="">Habitaciones ocupadas</option>
+						{% for x in proximas %}
+						<option disabled value="">N°: {{x.habitacion.numeroHabitacion}}, desde: {{x.fechaLlegada|date:"d-m-Y"}} hasta: {{x.fechaSalida|date:"d-m-Y"}} </option>
+						{% endfor %}
+					</select>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+{% endif %}
+{% endblock content %}
+{% block js %}
+	<script src="{% static 'MenuBase/js/pages/js_reservaciones.js' %}"></script>
+	<!--DATERANGEPICKER-->
+	<script type="text/javascript" src="{% static 'MenuBase/vendor/libs/moment/moment.min.js' %}"></script>
+	<script type="text/javascript" src="{% static 'MenuBase/vendor/libs/daterangepicker/daterangepicker.js' %}"></script>
+{% endblock js %}

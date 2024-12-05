@@ -1,0 +1,100 @@
+{% extends "MenuPage.html" %}
+{% load static %}
+{% block title %}Datos PagoMovil{% endblock title %}
+{% block content %}
+{% if request.user.is_staff %}
+	<div class="card p-3">
+		<h5 class="card-header">Listado de PagoMovil</h5>
+		<div class="table-responsive text-nowrap">
+			<div class="card-title d-flex align-items-start justify-content-between">
+				<div class="avatar flex-shrink-0">
+		  
+				</div>
+				<div class="dropdown">
+					<button class="btn p-0" type="button" id="cardOpt1" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						<i class="bx bx-dots-vertical-rounded"></i>
+					</button>
+					<div class="dropdown-menu" aria-labelledby="cardOpt1">
+						<button class="dropdown-item" tabindex="-1" onclick="abrir_modal_pagomovil();">Agregar</button>
+					</div>
+				</div>
+			</div>
+			<table id="pagoMovil" class="table table-striped table-bordered" style="width:100%">
+				<thead>
+					<tr>
+						<th>Banco</th>
+						<th>Telefono</th>
+						<th>Cedula</th>
+						<th>Opciones</th>
+					</tr>
+				</thead>
+				<tbody>
+				</tbody>
+			</table>
+		</div>
+	</div>
+
+
+	<!-- Modales -->
+
+	<div class="col-lg-4 col-md-3">
+		<!-- Modal -->
+		<div class="modal fade" id="modal_pagomovil" data-bs-backdrop="static" tabindex="-1" aria-hidden="true" style="display: none;">
+		  <div class="modal-dialog">
+			<form class="modal-content" id="form_pagomovil">{% csrf_token %}
+				<input type="hidden" name="action" value="nuevo_pago_movil">
+				<input type="hidden" name="id" value="0">
+			  <div class="modal-header">
+				<h5 class="modal-title" id="backDropModalTitle">Registrar Datos de PagoMovil</h5>
+				<button type="button" class="btn-close" onclick="cerrar_modal_pagomovil();"></button>
+			  </div>
+			  <div class="modal-body">
+				<div class="row">
+				  <div class="col mb-3">
+					<label for="id_banco" class="form-label">Codigo del Banco</label>
+					<input type="text" id="id_banco" name="banco" class="form-control" placeholder="Banco" required maxlength="4" minlength="4" onkeypress="return Solo_Numero_ci(event);">
+				  </div>
+				</div>
+				<div class="row g-2">
+				  <div class="col mb-0">
+					<label for="id_telefono" class="form-label">Telefono</label>
+					<input type="text" id="id_telefono" name="telefono" class="form-control" placeholder="Numero de telefono" maxlength="11" minlength="11" required onkeypress="return Solo_Numero_ci(event);">
+				  </div>
+				  <div class="col mb-0">
+					<label for="id_cedula" class="form-label">Cedula</label>
+					<input type="text" id="id_cedula" name="cedula" class="form-control" placeholder="Cedula" required maxlength="8" minlength="8" onkeypress="return Solo_Numero_ci(event);">
+				  </div>
+				</div>
+			  </div>
+			  <div class="modal-footer">
+				<button type="button" class="btn btn-outline-secondary" onclick="cerrar_modal_pagomovil();">
+				  Cerrar
+				</button>
+				<button type="submit" class="btn btn-primary">Guardar</button>
+			  </div>
+			</form>
+		  </div>
+		</div>
+	  </div>
+	</div>
+
+{% else %}
+<div class="misc-wrapper">
+    <h2 class="mb-2 mx-2">La página no Funciona :(</h2>
+    <p class="mb-4 mx-2">Oops! 😖 No tienes permiso para ingresar a esta sección.</p>
+    <a href="{% url 'reservacion:menu' %}" class="btn btn-primary">Regresar al Inicio</a>
+    <div class="mt-3">
+        <img
+            src="{% static 'MenuBase/img/error_page.png' %}"
+            alt="page-misc-error-light"
+            width="500"
+            class="img-fluid"
+        />
+    </div>
+</div>
+{% endif %}
+
+{% endblock content %}
+{% block js %}
+	<script src="{% static 'MenuBase/js/pages/js_pagomovil.js' %}"></script>
+{% endblock js %}

@@ -1,0 +1,210 @@
+{% load static %}
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="description" content="Página del Motel La Cigarra para permitir a nuestros clientes reservar habitaciones online">
+  <meta name="keywords" content="motel, la cigarra, hotel, hospedaje, guanare, reservaciones, reservas">
+  <link rel="icon" type="image/x-icon" href=" {% static 'MenuBase/img/hotel.ico' %}" />
+
+  <title>Motel La Cigarra</title>
+
+  <link rel="stylesheet" href="{% static 'landingPage/css/bootstrap.css' %}">
+  
+  <link rel="stylesheet" href="{% static 'landingPage/css/maicons.css' %}">
+
+  <link rel="stylesheet" href="{% static 'landingPage/vendor/animate/animate.css' %}">
+
+  <link rel="stylesheet" href="{% static 'landingPage/vendor/owl-carousel/css/owl.carousel.css' %}">
+
+  <link rel="stylesheet" href="{% static 'landingPage/vendor/fancybox/css/jquery.fancybox.css' %}">
+
+  <link rel="stylesheet" href="{% static 'landingPage/css/theme.css' %}">
+
+</head>
+<body>
+
+  <header >
+    <div class="top-bar">
+      <div class="container" >
+        <div class="row align-items-center">
+          <div class="col-md-8">
+            <div class="d-inline-block">
+              <span class="mai-mail fg-primary"></span> <a href="mailto:contact@mail.com">Motellacigarra@gmail.com</a>
+            </div>
+            <div class="d-inline-block ml-2">
+              <span class="mai-call fg-primary"></span> <a href="tel:+0011223495">+58 414-5454931</a>
+            </div>
+          </div>
+          <div class="col-md-4 text-right d-none d-md-block">
+            <div class="social-mini-button">
+              <a href="https://m.facebook.com/people/motel-la-cigarra/100063825349800/"><span class="mai-logo-facebook-f"></span></a>
+              <a href="https://www.instagram.com/motellacigarra/"><span class="mai-logo-instagram"></span></a>
+            </div>
+          </div>
+        </div>
+      </div> <!-- .container -->
+    </div> <!-- .top-bar -->
+
+    <nav class="navbar navbar-expand-lg navbar-light">
+      <div class="container">
+        <a href="{% url 'reservacion:home' %}" class="navbar-brand text-uppercase">Motel <span class="text-danger">La Cigarra</span></a>
+
+        <button class="navbar-toggler" data-toggle="collapse" data-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="navbar-collapse collapse" id="navbarContent">
+          <ul class="navbar-nav ml-auto pt-3 pt-lg-0">
+            <li class="nav-item active">
+              <a href="{% url 'reservacion:home' %}" class="nav-link">Inicio</a>
+            </li>
+            <li class="nav-item">
+              <a href="#nosotros" class="nav-link">Nosotros</a>
+            </li>
+            {% if request.user.is_authenticated %}
+              <li class="nav-item">
+                <a href="{% url 'reservacion:reservacion' %}" class="nav-link">Reservaciones</a>
+              </li>
+            {% endif %}
+            <li class="nav-item">
+              <a href="#page-footer" class="nav-link">Contacto</a>
+            </li>
+            {% if not request.user.is_authenticated %}
+              <li class="nav-item">
+                <a href="{% url 'login' %}" class="nav-link">Entrar</a>
+              </li>
+            {% else %}
+              <li class="nav-item">
+                <a href="{% url 'logout' %}" class="nav-link">Salir</a>
+              </li>
+            {% endif %}
+
+            {% if request.user.is_authenticated %}
+              <li class="nav-item ml-5">
+                <a class="nav-link ml-5">Usuario: {{request.user.nombre}} {{request.user.apellido}}</a>
+              </li>
+            {% endif %}
+          </ul>
+        </div>
+      </div> <!-- .container -->
+    </nav> <!-- .navbar -->
+
+    <div class="page-banner home-banner mb-5">
+      <div class="slider-wrapper">
+        <div class="owl-carousel hero-carousel">
+          <div class="hero-carousel-item">
+            <img src="{% static 'landingPage/img/room2.jpg' %}" alt="">
+            <div class="img-caption">
+              <div class="subhead">Diseño simple y acogedor,</div>
+              <h1 class="mb-4">Experiencia grata y satisfactoria.</h1>
+            </div>
+          </div>
+          <div class="hero-carousel-item">
+            <img src="{% static 'landingPage/img/room1.jpg' %}" alt="">
+            <div class="img-caption">
+              <h1 class="mb-4">Excelente ambiente cómodo y acogedor para aquellos que buscan privacidad y discreción.</h1>
+            </div>
+          </div>
+          <div class="hero-carousel-item">
+            <img src="{% static 'landingPage/img/room3.jpg' %}" alt="">
+            <div class="img-caption">
+              <div class="subhead">Diseñado para brindar una experiencia</div>
+              <h1 class="mb-4">única y satisfactoria a nuestros huéspedes.</h1>
+              {% if request.user.is_authenticated %}
+                <a href="{% url 'reservacion:new_reservacion' %}" class="btn btn-primary">Reservar</a>
+              {% else %}
+              <a href="{% url 'reservacion:register' %}" class="btn btn-primary">Registrarse</a>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div> <!-- .slider-wrapper -->
+    </div> <!-- .page-banner -->
+  </header>
+
+  <main>
+    <div class="page-section" id="nosotros">
+      <div class="container">
+        <div class="row align-items-center">
+          <div class="col-lg-6 py-3">
+            <div class="subhead">Acerca de Nosotros</div>
+            <h2 class="title-section">Somos una <span class="fg-danger">excelente opción</span> para tu alojamiento temporal</h2>
+
+            <p>La Cigarra Hotel es un encantador y acogedor establecimiento ubicado en un entorno sereno y tranquilo. Con habitaciones confortables y un ambiente relajado, brinda a sus huéspedes una experiencia auténtica y memorable. Situado en medio de hermosos paisajes naturales, es el lugar ideal para escapar del ajetreo de la vida cotidiana y sumergirse en la calma y la belleza de la naturaleza circundante. Aunque no se trata de un hotel de grandes dimensiones, su tamaño más íntimo permite un servicio personalizado y atento, donde cada huésped es tratado de manera individual y especial. La ubicación estratégica del hotel te ofrece la oportunidad de explorar los tesoros locales, descubrir lugares ocultos y sumergirte en la cultura y las tradiciones de la región. En La Cigarra Hotel, encontrarás un remanso de paz donde podrás relajarte y disfrutar de una estancia tranquila y auténtica.</p>
+
+            {% if not request.user.is_authenticated %}
+              <a href="{% url 'reservacion:register' %}" class="btn btn-primary mt-4">Registrarse</a>
+            {% else %}
+              <a href="{% url 'reservacion:new_reservacion' %}" class="btn btn-primary mt-4">Reservar</a>
+            {% endif %}
+            
+          </div>
+          <div class="col-lg-6 py-3">
+            <div class="about-img">
+              <img src="{% static 'landingPage/img/hotel.jpeg' %} " alt="">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div> <!-- .page-section -->
+  </main>
+
+  <footer class="page-footer" id="page-footer">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-4 py-3">
+          <h3>Motel <span class="fg-danger">La Cigarra.</span></h3>
+        </div>
+        <div class="col-lg-4 py-3">
+          <h5>Información de contacto</h5>
+          <p>Dirección: Carretera vía Guanarito, Km 2 Sector Los Cocos, Guanare, estado Portuguesa.</p>
+          <p>Correo: Motellacigarra@gmail.com</p>
+          <p>Teléfono: +58 414-5454931</p>
+        </div>
+        <div class="col-lg-4 py-3">
+          <h5>Menú</h5>
+          <ul class="footer-menu">
+            <li><a href="#">Nosotros</a></li>
+            <li><a href="{% url 'reservacion:mi_reservacion' %}">Reservaciones</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <hr>
+
+      <div class="row mt-4">
+        <div class="col-md-6">
+          <p>Copyright 2023. Motel La Cigarra</a></p>
+          <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+            <img alt="Licencia de Creative Commons" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/88x31.png" /></a><br />Este obra está bajo una <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">licencia de Creative Commons Reconocimiento 4.0 Internacional
+          </a>
+        </div>
+        <div class="col-md-6 text-right">
+          <div class="sosmed-button">
+            <a href="https://m.facebook.com/people/motel-la-cigarra/100063825349800/"><span class="mai-logo-facebook-f"></span></a>
+            <a href="https://www.instagram.com/motellacigarra/"><span class="mai-logo-instagram"></span></a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  
+<script src="{% static 'landingPage/js/jquery-3.5.1.min.js' %}"></script>
+
+<script src="{% static 'landingPage/js/bootstrap.bundle.min.js' %}"></script>
+
+<script src="{% static 'landingPage/vendor/owl-carousel/js/owl.carousel.min.js' %}"></script>
+
+<script src="{% static 'landingPage/vendor/wow/wow.min.js' %}"></script>
+
+<script src="{% static 'landingPage/vendor/fancybox/js/jquery.fancybox.min.js' %}"></script>
+
+<script src="{% static 'landingPage/vendor/isotope/isotope.pkgd.min.js' %}"></script>
+
+<script src="{% static 'landingPage/js/theme.js' %}"></script>
+
+</body>
+</html>

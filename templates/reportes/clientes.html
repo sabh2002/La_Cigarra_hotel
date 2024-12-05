@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title>Reporte de Clientes</title>
+<style>
+    @page {
+        size: a4 portrait;
+        margin: 3.5cm 2.0cm 2.5cm 2.0cm;
+        @frame header_frame {           /* Static Frame */
+            -pdf-frame-content: header_content;
+            left: 40pt; width: 512pt; top: 10pt; height: 100pt;
+        }
+        @frame content_frame {          /* Content Frame */
+            -pdf-frame-content: content_frame;
+            left: 50pt; width: 512pt; top: 90pt; height: 632pt;
+        }
+        @frame footer_frame {           /* Another static Frame */
+            -pdf-frame-content: footer_content;
+            left: -70pt; width: 512pt; top: 772pt; height: 20pt;
+        }
+    }
+    .head {
+        text-align: center;
+        text-transform: uppercase;
+        font-size: 13px;
+        font-weight: 600;
+        margin-bottom: 3rem;
+    }
+
+    #invoice thead tr th {
+        text-align: left;
+        border-bottom: 1px solid black;
+        border-top: 1px solid black;
+        padding-top: 4px;
+    }
+
+    #invoice thead tr {
+        margin-bottom: 0;
+        padding-bottom: 0;
+    }
+
+    #invoice tbody tr {
+        padding: 0;
+    }
+
+    .cosa{
+        width: 100%;
+        margin: 10px;
+        border-top: black;
+    }
+
+    #invoice tbody tr td {
+        text-align: left;
+        border-bottom: 1px solid rgb(183, 183, 183);
+        padding-top: 4px;
+    }
+
+</style>
+<body>
+    <div id="header_content">
+        <img src="{{logo}}" alt="logo" width="100px" height="100px">
+        <p class="head">
+            <b style="font-size: 20px;">MOTEL LA CIGARRA</b> <br>
+        </p>
+    </div>
+<div class="content_frame">
+    <p>
+        <b style="font-size: 18px;">Reporte de Clientes</b> <br> <br>
+        <b>FECHA EN QUE SE GENERA EL REPORTE:  {{ today|date:"d-m-Y" }}, HORA: {{hour|date:"H:i"}}</b> <br>
+    </p>
+    <table id="invoice">
+        <thead>
+            <tr>
+                <th class="cosa">Cedula</th>
+                <th class="cosa">Nombres</th>
+                <th class="cosa">Apellido</th>
+                <th class="cosa">Dirección</th>
+                <th class="cosa">Telefono</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for x in cli %}
+            <tr>
+                <td class="cosa">{{ x.cedula }}</td>
+                <td class="cosa">{{ x.nombre }}</td>
+                <td class="cosa">{{ x.apellido }}</td>
+                <td class="cosa">{{ x.direccion }}</td>
+                <td class="cosa">{{ x.telefono}}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+<div id="footer_content">Pág. <pdf:pagenumber>
+    de <pdf:pagecount>
+</div>
+</body>
+</html>
